@@ -1,0 +1,20 @@
+version: '3.6'
+
+services:
+  nginx:
+    image: nginx:1.21.6-alpine
+    volumes:
+      - ./config/nginx/cert:/etc/nginx/cert
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/auth_basic:/etc/nginx/auth_basic
+      - /var/log/nginx/chatgpt:/var/log/nginx/
+    ports:
+      - '443:443'
+    depends_on:
+      - chatgpt
+
+  chatgpt:
+    build: .
+    environment:
+      - "OPENAI_API_KEY={{ openai_api_key }}"
